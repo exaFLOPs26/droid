@@ -63,7 +63,23 @@ def collect_trajectory(
     num_steps = 0
     if reset_robot:
         env.reset(randomize=randomize_reset)
+        
+    HOST = 'localhost'   # or IP of the sim machine
+    PORT = 9999          # any free port
 
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    # Try to connect (may retry if sim starts later)
+    connected = False
+    while not connected:
+        try:
+            sock.connect((HOST, PORT))
+            connected = True
+        except ConnectionRefusedError:
+            print("Waiting for simulation to start...")
+            time.sleep(1)
+
+    print("Connected to simulation receiver.")
     # Begin! #
     while True:
         # Collect Miscellaneous Info #
@@ -73,6 +89,9 @@ def collect_trajectory(
 
         # Get Observation #
         obs = env.get_observation()
+        
+        sock.sendall((json.dumps(obs) + "\n").encode('utf-8'))
+        
         if obs_pointer is not None:
             obs_pointer.update(obs)
         obs["controller_info"] = controller_info

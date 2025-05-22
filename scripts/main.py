@@ -4,6 +4,10 @@ from droid.user_interface.data_collector import DataCollecter
 from droid.user_interface.gui import RobotGUI
 import argparse
 
+import socket
+import json
+import time
+
 parser = argparse.ArgumentParser(description='Process a boolean argument for right_controller.')
 
 # Adding the right_controller argument

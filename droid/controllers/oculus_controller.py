@@ -191,4 +191,5 @@ class VRPolicy:
                 return action, {}
             else:
                 return action
+        
         return self._calculate_action(obs_dict["robot_state"], include_info=include_info)
